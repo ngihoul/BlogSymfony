@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+    <h1>Bienvenue sur mon {{ title }} !</h1>
+    <p><a href="{{ path('magical') }}">Tous les articles content le mot "magical"</a></p>
+    <p>Nos articles par année</p>
+    <ul>
+        {% for year in yearsOfArticles %}
+        <li><a href="article/year/{{ year['year'] }}">{{ year['year'] }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

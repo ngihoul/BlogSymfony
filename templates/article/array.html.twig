@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+    <h1>{{ title }}</h1>
+
+    <h2>Tableau de nombres pairs et impairs</h2>
+    <p> Le tableau : {{ arrayNumbers|join(", ") }}</p>
+    
+    <h3>Chiffres pairs</h3>
+    <ul>
+    {% for number in arrayNumbers|filter(number => number is even) %}
+        <li>{{ number }}</li>
+    {% endfor %}
+    </ul>
+    <h3>Chiffres impairs</h3>
+    <ul>
+    {% for number in arrayNumbers|filter(number => number is odd) %}
+        <li>{{ number }}</li>
+    {% endfor %}
+    </ul>
+
+    <h3>Plus grand nombre : {{ max(arrayNumbers) }}</h3>
+
+    <h3>Nombre aléatoire : {{ random(arrayNumbers) }}
+    
+
+    <h2>Tableau string</h2>
+
+    <h3>Premier élément</h3>
+    <p>{{ arrayString|first }}</p>
+
+    <h3>Première lettre en majuscile</h3>
+    <ul>
+    {% for string in arrayString %}
+        <li>{{ string|capitalize }}</li>
+    {% endfor %}
+    </ul>
+
+    <h3>Chaîne aléatoire : {{ random(arrayString)|capitalize }}
+
+    <h2>Date</h2>
+    {% if date != date() %}
+        <p class="not_today">Ce n'est pas la date du jour : {{ date }}</p>
+    {% else %}
+        <p class="today">C'est aujourd'hui : {{ date }}</p>
+    {% endif %}
+
+    
+</div>
+{% endblock %}

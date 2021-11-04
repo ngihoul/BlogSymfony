@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ article.title }}{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+    <h1>{{ article.title }}</h1>
+    <p>{{ article.content }}</p>
+    <p>Article publié le {{ article.creationDate|date('d/m/Y') }}</p>
+    <div class="vote">
+    <p>Que pensez-vous de cet article ?</p>
+        <span id="up" data-id="{{ article.id }}" class="vote-up up">+</span>
+        <span id="vote-number" class="vote-number">{{ article.voteCounter }}</span>
+        <span id="down" data-id="{{ article.id }}" class="vote-down down">-</span>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script async="true" src="{{ asset('js/vote.js') }}"></script>
+{% endblock %}
