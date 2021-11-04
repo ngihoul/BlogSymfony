@@ -1,21 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap');
+
 body {
     padding: 0;
     margin: 0;
+    font-family: 'Roboto', sans-serif;
 }
 
 h1 {
     font-size: 2.5rem;
-    color: #4682B4;
+    color: #1C4774;
 }
 
 h2 {
     font-size: 2rem;
-    color: #6495ED;
+    color: #4075AD;
 }
 
 h3 {
     font-size: 1.5rem;
-    color: #1E90FF;
+    color: #9AD0E2;
 }
 
 p {
@@ -27,6 +30,17 @@ ul {
     list-style-type: none;
 }
 
+a {
+    text-decoration: none;
+    color: #1C4774;
+    transition: 0.5s color;
+}
+
+a:hover {
+    color: #9AD0E2;
+    transition: 0.5s color; 
+}
+
 .not_today {
     color: red;
 }
@@ -35,28 +49,39 @@ ul {
     color: green;
 }
 /* Navbar */
-nav, footer {
+.navbar, footer {
     text-align: center;
-    background-color: #4682B4;
+    background-color: #1C4774;
 }
 
-nav ul {
+.navbar ul {
     margin: 0;
 }
 
-nav ul li {
+.navbar ul li {
     display: inline-block;
     width: 20%;
     height: 50px;
     line-height: 50px;
 }
 
-nav ul li a {
+.navbar ul li a {
+    display: inline-block;
+    color: #fff;
+    width: 100%;
+    height: 100%;
+    font-family: 'Roboto', sans-serif;
+    font-weight: bolder;
+    letter-spacing: 0.2rem;
+    text-transform: uppercase;
+}
+
+.navbar ul li a:hover {
     color: #fff;
 }
 
-nav ul li:hover {
-    background: #6495ED;
+.navbar ul li:hover {
+    background: #4075AD;
 }
 
 footer p {
