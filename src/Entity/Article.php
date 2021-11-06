@@ -43,6 +43,11 @@ class Article
      */
     private $voteCounter;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="articles")
+     */
+    private $category;
+
     public function __construct() {
         $this->setCreationDate(new DateTime("NOW"));
         $this->setVoteCounter(0);
@@ -108,5 +113,17 @@ class Article
     public function downVote() {
         $newCounter = $this->getVoteCounter();
         $this->setVoteCounter(--$newCounter);
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
+
+        return $this;
     }
 }

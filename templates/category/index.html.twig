@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nos articles par catégorie !{% endblock %}
+
+{% block body %}
+
+<div class="body-wrapper">
+    <h1>Nos articles par catégorie !</h1>
+{% for category in categories %}
+    <li>
+        <a href="/{{ category.name }}/">{{ category.name }}</a>
+    </li>
+{% endfor %}
+    
+</div>
+{% endblock %}
