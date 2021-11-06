@@ -5,20 +5,21 @@ namespace App\Controller;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use Faker\Factory;
 use App\Entity\Article;
+use App\Form\ArticleType;
 
 class ArticleController extends AbstractController
 {
     public $title = 'Tous les articles';
 
-     #[Route("/article", name: "article")]
+    #[Route("/article", name: "article")]
     public function index(EntityManagerInterface $em): Response
     {
-
         $repository = $em->getRepository(Article::class);
         $articles = $repository->findAll();
 
@@ -51,13 +52,38 @@ class ArticleController extends AbstractController
         ]);
     }
 
+    // Create new article
+
+    #[Route('/article/new', name: 'create')]
+    public function create(Request $request, EntityManagerInterface $em)
+    {
+        $article = new Article();
+
+        $form = $this->createForm(ArticleType::class, $article);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $article = $form->getData();
+
+            $em->persist($article);
+            $em->flush();
+
+            $id = $article->getId();
+            return $this->redirectToRoute('article_detail', ['id' => $id]);
+        }
+
+        return $this->renderForm('article/new.html.twig', [
+            'form' => $form
+        ]);
+    }
+
     #[Route("/article/{id}", name: "article_detail")]
     public function show($id, EntityManagerInterface $em)
     {
         $repository = $em->getRepository(Article::class);
         $article = $repository->find($id);
 
-        if(!$article) {
+        if (!$article) {
             return $this->render('article/404.html.twig');
         }
 
@@ -66,12 +92,13 @@ class ArticleController extends AbstractController
         ]);
     }
 
-    #[Route("/article/year/{year}", name:"year_articles")]
-    public function showArticlesByYear($year, entityManagerInterface $em) {
+    #[Route("/article/year/{year}", name: "year_articles")]
+    public function showArticlesByYear($year, entityManagerInterface $em)
+    {
         $repository = $em->getRepository(Article::class);
         $articles = $repository->getArticlesByYear($year);
 
-        if(!$articles) {
+        if (!$articles) {
             return $this->render('article/404.html.twig');
         }
 
@@ -81,10 +108,11 @@ class ArticleController extends AbstractController
         ]);
     }
 
-// Voting actions
+    // Voting actions
 
     #[Route("/article/{id}/up", name: "up_vote")]
-    public function upVote($id, EntityManagerInterface $em) {
+    public function upVote($id, EntityManagerInterface $em)
+    {
 
         $repository = $em->getRepository(Article::class);
         $article = $repository->find($id);
@@ -96,7 +124,8 @@ class ArticleController extends AbstractController
     }
 
     #[Route("/article/{id}/down", name: "down_vote")]
-    public function downVote($id, EntityManagerInterface $em) {
+    public function downVote($id, EntityManagerInterface $em)
+    {
         $repository = $em->getRepository(Article::class);
         $article = $repository->find($id);
         $article->downVote();
@@ -106,28 +135,11 @@ class ArticleController extends AbstractController
         return new JsonResponse($article->getVoteCounter());
     }
 
-// Create new article
-
-    #[Route('/create', name: 'create')]
-    public function create(EntityManagerInterface $em) {
-        $faker = Factory::create();
-        $article = new Article();
-        $article->setTitle($faker->realText(50, 1));
-        $article->setContent($faker->realText(1500, 2));
-        $article->setCreationDate(new \DateTime("2015-04-24"));
-    
-        $em->persist($article);
-        $em->flush();
-
-        return $this->render('home/index.html.twig', [
-            'title' => $this->title
-        ]);
-    }
-
     // Magical articles
 
     #[Route('/magical', name: 'magical')]
-    public function magical(EntityManagerInterface $em) {
+    public function magical(EntityManagerInterface $em)
+    {
         $repository = $em->getRepository(Article::class);
         $articles = $repository->findContentWith('magical');
 
@@ -136,8 +148,6 @@ class ArticleController extends AbstractController
             'articles' => $articles
         ]);
     }
-
-
 
     public function randomDate($startDate, $endDate)
     {

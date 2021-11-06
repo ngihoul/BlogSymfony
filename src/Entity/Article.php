@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\ArticleRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use \DateTime;
 
 /**
  * @ORM\Entity(repositoryClass=ArticleRepository::class)
@@ -19,23 +21,32 @@ class Article
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
      */
     private $title;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\NotBlank
      */
     private $content;
 
     /**
      * @ORM\Column(type="date")
+     * @Assert\Type("\DateTime")
      */
     private $creationDate;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Assert\PositiveOrZero
      */
     private $voteCounter;
+
+    public function __construct() {
+        $this->setCreationDate(new DateTime("NOW"));
+        $this->setVoteCounter(0);
+    }
 
     public function getId(): ?int
     {
@@ -66,15 +77,14 @@ class Article
         return $this;
     }
 
-    public function getCreationDate(): ?\DateTimeInterface
+    public function getCreationDate(): DateTime
     {
         return $this->creationDate;
     }
 
-    public function setCreationDate(\DateTimeInterface $creationDate): self
+    public function setCreationDate(DateTime $creationDate): self
     {
         $this->creationDate = $creationDate;
-
         return $this;
     }
 
@@ -85,16 +95,18 @@ class Article
 
     public function setVoteCounter(?int $voteCounter): self
     {
-        $this->voteCounter = $voteCounter;
+        $this->voteCounter = $voteCounter <= 0 ? 0 : $voteCounter;
 
         return $this;
     }
 
     public function upVote() {
-        $this->voteCounter++;
+        $newCounter = $this->getVoteCounter();
+        $this->setVoteCounter(++$newCounter);
     }
 
     public function downVote() {
-        $this->voteCounter--;
+        $newCounter = $this->getVoteCounter();
+        $this->setVoteCounter(--$newCounter);
     }
 }
