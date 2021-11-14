@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ title }}{% endblock %}
+{% block title %}{{ category.name }}{% endblock %}
 
 {% block body %}
 
     <div class="body-wrapper">
-        <h1>{{ title }} {% if q is not null %} avec "{{ q }}" {% endif %}</h1>
+        <h1>Les articles concernant {{ category.name }}</h1>
         <ul>
             {% for article in articles %}
                 <li>{{ article.creationDate|date('d/m/Y') }} : [{{ article.category.name }}] <a

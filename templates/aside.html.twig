@@ -1,0 +1,27 @@
+<aside>
+    <div class="search-bar">
+        <h3>Rechercher un article</h3>
+        <form action="/article" class="search-form">
+            <input class="search-input" type="search" name="q" value="{% if q is not null %}{{ q }}{% endif %}"/>
+            <button class="btn-search">
+                <i class="fas fa-search"></i>
+            </button>
+        </form>
+        <div>
+            <h3>Articles par année</h3>
+            <ul>
+                {{ render(controller(
+                    'App\\Controller\\HomeController::getYearsOfArticles'
+                )) }}
+            </ul>
+        </div>
+        <div>
+            <h3>Articles par catégorie</h3>
+            <ul>
+                {{ render(controller(
+                    'App\\Controller\\HomeController::getCategories'
+                )) }}
+            </ul>
+        </div>
+    </div>
+</aside>

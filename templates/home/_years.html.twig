@@ -1,0 +1,4 @@
+{# Fragment to display a list of years in aside #}
+{% for year in yearsOfArticles %}
+    <li><a href="{{ path('year_articles', { year: year['year'] }) }}">{{ year['year'] }}</a></li>
+{% endfor %}

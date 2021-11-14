@@ -3,15 +3,8 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block body %}
-
-<div class="body-wrapper">
-    <h1>Bienvenue sur mon {{ title }} !</h1>
-    <p><a href="{{ path('magical') }}">Tous les articles content le mot "magical"</a></p>
-    <p>Nos articles par année</p>
-    <ul>
-        {% for year in yearsOfArticles %}
-        <li><a href="article/year/{{ year['year'] }}">{{ year['year'] }}</a></li>
-        {% endfor %}
-    </ul>
-</div>
+    <div class="body-wrapper">
+        <h1>Bienvenue sur mon {{ title }} !</h1>
+        <p><a href="{{ path('magical') }}">Tous les articles content le mot "magical"</a></p>
+    </div>
 {% endblock %}

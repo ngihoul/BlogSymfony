@@ -19,31 +19,47 @@ class ArticleRepository extends ServiceEntityRepository
         parent::__construct($registry, Article::class);
     }
 
-    public function findContentWith($value) {
+    /**
+     * Find articles with specific content
+     * @param $value string Searched value
+     * @return mixed
+     */
+    public function findTitleOrContentWith(string $value): mixed
+    {
         return $this->createQueryBuilder('a')
-                    ->where("a.content LIKE :value")
-                    ->setParameter(':value', "%$value%")
-                    ->getQuery()
-                    ->getResult()
-        ;
+            ->andWhere("a.content LIKE :value")
+            ->orWhere("a.title LIKE :value")
+            ->setParameter(':value', "%$value%")
+            ->getQuery()
+            ->getResult();
     }
 
-    public function getYearsOfArticles() {
+    /**
+     * Get a group of all articles years
+     * @return mixed
+     */
+    public function getYearsOfArticles(): mixed
+    {
         return $this->createQueryBuilder('a')
-                    ->select('YEAR(a.creationDate) AS year')
-                    ->groupBy('year')
-                    ->getQuery()
-                    ->getResult()
-        ;
+            ->select('YEAR(a.creationDate) AS year')
+            ->groupBy('year')
+            ->orderBy('year', 'DESC')
+            ->getQuery()
+            ->getResult();
     }
 
-    public function getArticlesByYear($year) {
+    /**
+     *
+     * @param int|string $year Searched year
+     * @return mixed
+     */
+    public function getArticlesByYear(int|string $year): mixed
+    {
         return $this->createQueryBuilder('a')
-                    ->where('YEAR(a.creationDate) = :year')
-                    ->setParameter(':year', $year)
-                    ->getQuery()
-                    ->getResult()
-        ;
+            ->where('YEAR(a.creationDate) = :year')
+            ->setParameter(':year', $year)
+            ->getQuery()
+            ->getResult();
     }
 
     // /**

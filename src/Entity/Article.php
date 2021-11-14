@@ -41,17 +41,18 @@ class Article
      * @ORM\Column(type="integer", nullable=true)
      * @Assert\PositiveOrZero
      */
-    private $voteCounter;
+    private $voteCounter = 0;
 
     /**
      * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="articles")
      */
     private $category;
 
-    public function __construct() {
-        $this->setCreationDate(new DateTime("NOW"));
-        $this->setVoteCounter(0);
+    public function __construct()
+    {
+        $this->setCreationDate(new DateTime());
     }
+
 
     public function getId(): ?int
     {
@@ -105,12 +106,14 @@ class Article
         return $this;
     }
 
-    public function upVote() {
+    public function upVote()
+    {
         $newCounter = $this->getVoteCounter();
         $this->setVoteCounter(++$newCounter);
     }
 
-    public function downVote() {
+    public function downVote()
+    {
         $newCounter = $this->getVoteCounter();
         $this->setVoteCounter(--$newCounter);
     }

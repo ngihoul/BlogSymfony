@@ -2,8 +2,9 @@
 
 namespace App\Controller;
 
-use Doctrine\ORM\EntityManager;
+use App\Repository\ArticleRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -15,20 +16,30 @@ use App\Form\ArticleType;
 
 class ArticleController extends AbstractController
 {
-    public $title = 'Tous les articles';
+    private string $title = 'Tous les articles';
 
+    /**
+     * @param ArticleRepository $repo
+     * @return Response
+     */
     #[Route("/article", name: "article")]
-    public function index(EntityManagerInterface $em): Response
+    public function index(ArticleRepository $repo, Request $request): Response
     {
-        $repository = $em->getRepository(Article::class);
-        $articles = $repository->findAll();
+        $getParam = $request->query->get('q');
+        $articles = is_null($getParam) ?
+            $repo->findAll() :
+            $repo->findTitleOrContentWith($getParam);
 
         return $this->render('article/index.html.twig', [
             'title' => $this->title,
+            'q' => $getParam,
             'articles' => $articles
         ]);
     }
 
+    /**
+     * @return Response
+     */
     #[Route("/article/twig", name: "twig")]
     public function twig(): Response
     {
@@ -52,10 +63,13 @@ class ArticleController extends AbstractController
         ]);
     }
 
-    // Create new article
-
+    /**
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return RedirectResponse|Response
+     */
     #[Route('/article/new', name: 'create')]
-    public function create(Request $request, EntityManagerInterface $em)
+    public function create(Request $request, EntityManagerInterface $em): RedirectResponse|Response
     {
         $article = new Article();
 
@@ -68,8 +82,7 @@ class ArticleController extends AbstractController
             $em->persist($article);
             $em->flush();
 
-            $id = $article->getId();
-            return $this->redirectToRoute('article_detail', ['id' => $id]);
+            return $this->redirectToRoute('article_detail', ['id' => $article->getId()]);
         }
 
         return $this->renderForm('article/new.html.twig', [
@@ -77,11 +90,15 @@ class ArticleController extends AbstractController
         ]);
     }
 
+    /**
+     * @param int $id
+     * @param ArticleRepository $repo
+     * @return Response
+     */
     #[Route("/article/{id}", name: "article_detail")]
-    public function show($id, EntityManagerInterface $em)
+    public function show(int $id, ArticleRepository $repo): Response
     {
-        $repository = $em->getRepository(Article::class);
-        $article = $repository->find($id);
+        $article = $repo->find($id);
 
         if (!$article) {
             return $this->render('article/404.html.twig');
@@ -92,11 +109,15 @@ class ArticleController extends AbstractController
         ]);
     }
 
+    /**
+     * @param string $year
+     * @param ArticleRepository $repo
+     * @return Response
+     */
     #[Route("/article/year/{year}", name: "year_articles")]
-    public function showArticlesByYear($year, entityManagerInterface $em)
+    public function showArticlesByYear(string $year, ArticleRepository $repo): Response
     {
-        $repository = $em->getRepository(Article::class);
-        $articles = $repository->getArticlesByYear($year);
+        $articles = $repo->getArticlesByYear($year);
 
         if (!$articles) {
             return $this->render('article/404.html.twig');
@@ -108,40 +129,44 @@ class ArticleController extends AbstractController
         ]);
     }
 
-    // Voting actions
-
+    /**
+     * @param Article $article
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     */
     #[Route("/article/{id}/up", name: "up_vote")]
-    public function upVote($id, EntityManagerInterface $em)
+    public function upVote(Article $article, EntityManagerInterface $em): JsonResponse
     {
-
-        $repository = $em->getRepository(Article::class);
-        $article = $repository->find($id);
         $article->upVote();
-        $em->persist($article);
+
         $em->flush();
 
         return new JsonResponse($article->getVoteCounter());
     }
 
+    /**
+     * @param Article $article
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     */
     #[Route("/article/{id}/down", name: "down_vote")]
-    public function downVote($id, EntityManagerInterface $em)
+    public function downVote(Article $article, EntityManagerInterface $em): JsonResponse
     {
-        $repository = $em->getRepository(Article::class);
-        $article = $repository->find($id);
         $article->downVote();
-        $em->persist($article);
+
         $em->flush();
 
         return new JsonResponse($article->getVoteCounter());
     }
 
-    // Magical articles
-
+    /**
+     * @param ArticleRepository $repo
+     * @return Response
+     */
     #[Route('/magical', name: 'magical')]
-    public function magical(EntityManagerInterface $em)
+    public function magical(ArticleRepository $repo): Response
     {
-        $repository = $em->getRepository(Article::class);
-        $articles = $repository->findContentWith('magical');
+        $articles = $repo->findTitleOrContentWith('magical');
 
         return $this->render('article/magical.html.twig', [
             'title' => "Articles avec le mot 'magical'",
@@ -149,7 +174,12 @@ class ArticleController extends AbstractController
         ]);
     }
 
-    public function randomDate($startDate, $endDate)
+    /**
+     * @param $startDate
+     * @param $endDate
+     * @return string
+     */
+    public function randomDate($startDate, $endDate): string
     {
         $min = strtotime($startDate);
         $max = strtotime($endDate);
