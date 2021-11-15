@@ -27,7 +27,7 @@ class ArticleController extends AbstractController
     {
         $getParam = $request->query->get('q');
         $articles = is_null($getParam) ?
-            $repo->findAll() :
+            $repo->findBy([], ['creationDate' => 'DESC']) :
             $repo->findTitleOrContentWith($getParam);
 
         return $this->render('article/index.html.twig', [

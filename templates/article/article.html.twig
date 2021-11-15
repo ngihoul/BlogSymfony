@@ -14,7 +14,8 @@
 {% block body %}
     <div class="body-wrapper">
         <h1>[{{ article.category.name }}] {{ article.title }}</h1>
-        <p>{{ article.content }}</p>
+        {# Filtre |raw pour afficher html généré par CKEditor ! #}
+        <p>{{ article.content|raw }}</p>
         <p>Article publié le {{ article.creationDate|date('d/m/Y') }}</p>
         {% if article.lastModified is not null %}
             <p>Article modifié le {{ article.lastModified|date('d/m/Y') }} à {{ article.lastModified|date('H:i') }}</p>

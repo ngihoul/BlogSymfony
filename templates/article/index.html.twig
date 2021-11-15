@@ -8,12 +8,23 @@
         <h1>{{ title }} {% if q is not null %} avec "{{ q }}" {% endif %}</h1>
         <p>Il y a {{ articles|length }} résultat{% if articles|length > 1 %}s{% endif %} :</p>
         {% if articles != false %}
-            <ul>
-                {% for article in articles %}
-                    <li>{{ article.creationDate|date('d/m/Y') }} : [{{ article.category.name }}] <a
-                                href="{{ path("article_detail", { id : article.id }) }}">{{ article.title }}</a></li>
-                {% endfor %}
-            </ul>
+            {% for article in articles %}
+                <section class="article-preview">
+                    <h3>
+                        <a {{ article.creationDate|date('U') > "-7 days"|date('U') ? "class=\"new-article\" " : "" }}href="{{ path("article_detail", { id : article.id }) }}">{{ article.title }}</a>
+                    </h3>
+                    <p class="creation-date">Publié le {{ article.creationDate|date('d/m/Y') }} - Catégorie
+                        : {{ article.category.name }}</p>
+                    {% if article.content|length > 300 %}
+                        <p>{{ article.content|slice(0,300) ~ '...' }}</p>
+                        <p><a href="{{ path("article_detail", { id : article.id }) }}">Lire
+                                l'article "{{ article.title }}"</a></p>
+                    {% else %}
+                        <p>{{ article.content }}</p>
+                    {% endif %}
+
+                </section>
+            {% endfor %}
         {% else %}
             <p>Aucun article ne correspond à votre recherche "{{ q }}".</p>
             <a href="{{ path('article') }}">Revenir à la liste des articles</a>

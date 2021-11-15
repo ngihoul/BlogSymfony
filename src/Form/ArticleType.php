@@ -3,6 +3,8 @@
 namespace App\Form;
 
 use App\Entity\Article;
+use App\Entity\Category;
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -11,7 +13,8 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-use App\Entity\Category;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
+
 
 class ArticleType extends AbstractType
 {
@@ -26,9 +29,7 @@ class ArticleType extends AbstractType
                 'choice_label' => 'name',
                 'label' => 'Catégorie'
             ])
-            ->add('content', TextareaType::class, [
-                'label' => 'Contenu'
-            ])
+            ->add('content', CKEditorType::class, ['label' => 'Contenu'])
             ->add('save', SubmitType::class, [
                 'label' => 'Publier mon article'
             ]);
