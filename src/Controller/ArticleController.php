@@ -90,10 +90,26 @@ class ArticleController extends AbstractController
         ]);
     }
 
-    #[Route('/article/update/', name: 'update_article')]
-    public function update(Request $request, Article $article, ArticleRepository $articleRepository): Response
+    #[Route('/article/update/{id}', name: 'update_article')]
+    public function update(Request $request, Article $article, EntityManagerInterface $em): Response
     {
-        
+        $form = $this->createForm(ArticleType::class, $article);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $article = $form->getData();
+            $article->setLastModified(new \DateTime());
+
+            $em->persist($article);
+            $em->flush();
+
+            return $this->redirectToRoute('article_detail', ['id' => $article->getId()]);
+        }
+
+        return $this->renderForm('article/update.html.twig', [
+            'form' => $form,
+            'article' => $article
+        ]);
     }
 
     /**

@@ -48,6 +48,11 @@ class Article
      */
     private $category;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $lastModified;
+
     public function __construct()
     {
         $this->setCreationDate(new DateTime());
@@ -126,6 +131,18 @@ class Article
     public function setCategory(?Category $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    public function getLastModified(): ?\DateTimeInterface
+    {
+        return $this->lastModified;
+    }
+
+    public function setLastModified(?\DateTimeInterface $lastModified): self
+    {
+        $this->lastModified = $lastModified;
 
         return $this;
     }
