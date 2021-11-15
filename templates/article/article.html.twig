@@ -1,20 +1,29 @@
 {% extends 'base.html.twig' %}
 
+{% block navbarAdmin %}
+    {{ parent() }}
+    <li>
+        <a class="admin-navbar-item item-update" href=" {{ path('update_article', { id: article.id }) }}">
+            <i title="Modifier un article" class="fas fa-pencil-alt"></i>
+        </a>
+    </li>
+{% endblock %}
+
 {% block title %}{{ article.title }}{% endblock %}
 
 {% block body %}
 
-<div class="body-wrapper">
-    <h1>[{{ article.category.name }}] {{ article.title }}</h1>
-    <p>{{ article.content }}</p>
-    <p>Article publié le {{ article.creationDate|date('d/m/Y') }}</p>
-    <div class="vote">
-    <p>Que pensez-vous de cet article ?</p>
-        <span id="up" data-id="{{ article.id }}" class="vote-up up">+</span>
-        <span id="vote-number" class="vote-number">{{ article.voteCounter }}</span>
-        <span id="down" data-id="{{ article.id }}" class="vote-down down">-</span>
+    <div class="body-wrapper">
+        <h1>[{{ article.category.name }}] {{ article.title }}</h1>
+        <p>{{ article.content }}</p>
+        <p>Article publié le {{ article.creationDate|date('d/m/Y') }}</p>
+        <div class="vote">
+            <p>Que pensez-vous de cet article ?</p>
+            <span id="up" data-id="{{ article.id }}" class="vote-up up">+</span>
+            <span id="vote-number" class="vote-number">{{ article.voteCounter }}</span>
+            <span id="down" data-id="{{ article.id }}" class="vote-down down">-</span>
+        </div>
     </div>
-</div>
 {% endblock %}
 
 {% block javascripts %}

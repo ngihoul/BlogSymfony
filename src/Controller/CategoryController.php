@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\ArticleRepository;
 use App\Repository\CategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,18 +27,17 @@ class CategoryController extends AbstractController
 
     /**
      * @param Category $category
-     * @param CategoryRepository $categoryRepository
+     * @param ArticleRepository $articleRepository
      * @return Response
      */
     #[Route('/category/{id}', name: 'categories_articles')]
-    public function showCategory(Category $category, CategoryRepository $categoryRepository): Response
+    public function showCategory(Category $category, ArticleRepository $articleRepository): Response
     {
-        $articles = $category->getArticles();
+        $articles = $articleRepository->findBy(['category' => $category], ['creationDate' => 'DESC']);
 
         return $this->render('category/list.html.twig', [
             'articles' => $articles,
             'category' => $category
-
         ]);
     }
 }

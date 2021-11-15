@@ -5,6 +5,42 @@
 {% block body %}
     <div class="body-wrapper">
         <h1>Bienvenue sur mon {{ title }} !</h1>
-        <p><a href="{{ path('magical') }}">Tous les articles content le mot "magical"</a></p>
+        {% for article in articles %}
+            <section class="article-preview">
+                <h3>
+                    <a {{ article.creationDate|date('U') > "-7 days"|date('U') ? "class=\"new-article\" " : "" }}href="{{ path("article_detail", { id : article.id }) }}">{{ article.title }}</a>
+                </h3>
+                <p class="creation-date">Publié le {{ article.creationDate|date('d/m/Y') }} - Catégorie
+                    : {{ article.category.name }}</p>
+                {% if article.content|length > 300 %}
+                    <p>{{ article.content|slice(0,300) ~ '...' }}</p>
+                    <p><a href="{{ path("article_detail", { id : article.id }) }}">Lire
+                            l'article "{{ article.title }}"</a></p>
+                {% else %}
+                    <p>{{ article.content }}</p>
+                {% endif %}
+
+            </section>
+        {% endfor %}
+        <div class="pagination">
+            <div class="previous">
+                {% if previous >= 0 %}
+
+                    <a href="{{ path('home', { offset: previous }) }}">
+                        <i class="fas fa-arrow-circle-left"></i>
+                        <span>Page précédente</span></a>
+
+                {% endif %}
+            </div>
+            <div class="next">
+                {% if next < articles|length %}
+
+                    <a href="{{ path('home', { offset: next }) }}">
+                        <span>Page suivante</span>
+                        <i class="fas fa-arrow-circle-right"></i></a>
+                {% endif %}
+            </div>
+        </div>
+
     </div>
 {% endblock %}

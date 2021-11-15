@@ -3,6 +3,7 @@ twig:
   form_themes: [ 'bootstrap_5_layout.html.twig' ]
   globals:
     q:
+    title: 'Super Blog'
 
 when@test:
   twig:

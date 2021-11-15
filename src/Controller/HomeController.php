@@ -5,25 +5,28 @@ namespace App\Controller;
 use App\Repository\ArticleRepository;
 use App\Repository\CategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class HomeController extends AbstractController
 {
-    private string $title = "Super blog";
-
     /**
-     * @param ArticleRepository $repo
+     * @param Request $request
+     * @param ArticleRepository $articleRepository
      * @return Response
      */
     #[Route("/", name: "home")]
-    public function home(ArticleRepository $repo): Response
+    public function home(Request $request, ArticleRepository $articleRepository): Response
     {
-        $yearsOfArticles = $repo->getYearsOfArticles();
+
+        $offset = max(0, $request->query->getInt('offset', 0));
+        $paginator = $articleRepository->getArticlePaginator($offset);
 
         return $this->render('home/index.html.twig', [
-            'title' => $this->title,
-            'yearsOfArticles' => $yearsOfArticles
+            'articles' => $paginator,
+            'previous' => $offset - ArticleRepository::PAGINATOR_PER_PAGE,
+            'next' => min(count($paginator), $offset + ArticleRepository::PAGINATOR_PER_PAGE)
         ]);
     }
 
@@ -35,7 +38,6 @@ class HomeController extends AbstractController
     public function getYearsOfArticles(ArticleRepository $articleRepository): Response
     {
         $years = $articleRepository->getYearsOfArticles();
-
         // Using fragments template (/_fragment)
         return $this->render("home/_years.html.twig", [
             'yearsOfArticles' => $years

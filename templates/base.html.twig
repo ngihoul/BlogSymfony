@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Welcome!{% endblock %}</title>
@@ -25,7 +25,38 @@
     {% endblock %}
 </head>
 <body>
-{% include 'header.html.twig' %}
+{% block navbar %}
+    <nav class="navbar">
+        <ul>
+            <li class="item-container">
+                <a class="navbar-item item-home" href="{{ path('home') }}">Accueil</a>
+            </li>
+            <li class="item-container">
+                <a class="navbar-item item-article" href="{{ path('article') }}">Articles</a>
+            </li>
+            <li class="item-container">
+                <a class="navbar-item item-twig" href="{{ path('twig') }}">Twig</a>
+            </li>
+        </ul>
+    </nav>
+{% endblock %}
+
+<nav id="adminNavBar" class="admin-navbar">
+    <ul>
+        {% block navbarAdmin %}
+            <li class="item-container">
+                <a class="admin-navbar-item item-login" href="#">
+                    <i title="Voir son profil" class="far fa-user"></i>
+                </a>
+            </li>
+            <li class="item-container">
+                <a class="admin-navbar-item item-create" href=" {{ path('create') }}">
+                    <i title="Créer un nouvel article" class="fas fa-plus"></i>
+                </a>
+            </li>
+        {% endblock %}
+    </ul>
+</nav>
 
 <div class="container">
     {% block body %}{% endblock %}

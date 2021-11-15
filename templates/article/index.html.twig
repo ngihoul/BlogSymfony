@@ -6,12 +6,18 @@
 
     <div class="body-wrapper">
         <h1>{{ title }} {% if q is not null %} avec "{{ q }}" {% endif %}</h1>
-        <ul>
-            {% for article in articles %}
-                <li>{{ article.creationDate|date('d/m/Y') }} : [{{ article.category.name }}] <a
-                            href="{{ path("article_detail", { id : article.id }) }}">{{ article.title }}</a></li>
-            {% endfor %}
-        </ul>
+        <p>Il y a {{ articles|length }} résultat{% if articles|length > 1 %}s{% endif %} :</p>
+        {% if articles != false %}
+            <ul>
+                {% for article in articles %}
+                    <li>{{ article.creationDate|date('d/m/Y') }} : [{{ article.category.name }}] <a
+                                href="{{ path("article_detail", { id : article.id }) }}">{{ article.title }}</a></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Aucun article ne correspond à votre recherche "{{ q }}".</p>
+            <a href="{{ path('article') }}">Revenir à la liste des articles</a>
+        {% endif %}
     </div>
 
 {% endblock %}

@@ -90,14 +90,24 @@ class ArticleController extends AbstractController
         ]);
     }
 
+    #[Route('/article/update/', name: 'update_article')]
+    public function update(Request $request, Article $article, ArticleRepository $articleRepository): Response
+    {
+        
+    }
+
     /**
      * @param int $id
      * @param ArticleRepository $repo
      * @return Response
      */
     #[Route("/article/{id}", name: "article_detail")]
-    public function show(int $id, ArticleRepository $repo): Response
+    public function show($id, ArticleRepository $repo): Response
     {
+        if (!is_numeric($id)) {
+            return $this->render('article/404.html.twig');
+        }
+
         $article = $repo->find($id);
 
         if (!$article) {
@@ -157,21 +167,6 @@ class ArticleController extends AbstractController
         $em->flush();
 
         return new JsonResponse($article->getVoteCounter());
-    }
-
-    /**
-     * @param ArticleRepository $repo
-     * @return Response
-     */
-    #[Route('/magical', name: 'magical')]
-    public function magical(ArticleRepository $repo): Response
-    {
-        $articles = $repo->findTitleOrContentWith('magical');
-
-        return $this->render('article/magical.html.twig', [
-            'title' => "Articles avec le mot 'magical'",
-            'articles' => $articles
-        ]);
     }
 
     /**

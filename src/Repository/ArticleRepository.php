@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Article;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * @method Article|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,6 +15,9 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ArticleRepository extends ServiceEntityRepository
 {
+    public const
+        PAGINATOR_PER_PAGE = 5;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Article::class);
@@ -29,6 +33,7 @@ class ArticleRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('a')
             ->andWhere("a.content LIKE :value")
             ->orWhere("a.title LIKE :value")
+            ->orderBy('a.creationDate', 'DESC')
             ->setParameter(':value', "%$value%")
             ->getQuery()
             ->getResult();
@@ -57,10 +62,23 @@ class ArticleRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('a')
             ->where('YEAR(a.creationDate) = :year')
+            ->orderBy('a.creationDate', 'DESC')
             ->setParameter(':year', $year)
             ->getQuery()
             ->getResult();
     }
+
+    public function getArticlePaginator(int $offset): Paginator
+    {
+        $query = $this->createQueryBuilder('a')
+            ->orderBy('a.creationDate', 'DESC')
+            ->setMaxResults(self::PAGINATOR_PER_PAGE)
+            ->setFirstResult($offset)
+            ->getQuery();
+
+        return new Paginator($query);
+    }
+
 
     // /**
     //  * @return Article[] Returns an array of Article objects
