@@ -53,6 +53,17 @@ class Article
      */
     private $lastModified;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="articles")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="modifiedArticles")
+     */
+    private $LastModifiedBy;
+
     public function __construct()
     {
         $this->setCreationDate(new DateTime());
@@ -143,6 +154,30 @@ class Article
     public function setLastModified(?\DateTimeInterface $lastModified): self
     {
         $this->lastModified = $lastModified;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getLastModifiedBy(): ?User
+    {
+        return $this->LastModifiedBy;
+    }
+
+    public function setLastModifiedBy(?User $LastModifiedBy): self
+    {
+        $this->LastModifiedBy = $LastModifiedBy;
 
         return $this;
     }

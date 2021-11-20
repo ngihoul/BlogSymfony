@@ -2,11 +2,13 @@
 
 {% block navbarAdmin %}
     {{ parent() }}
-    <li>
-        <a class="admin-navbar-item item-update" href=" {{ path('update_article', { id: article.id }) }}">
-            <i title="Modifier un article" class="fas fa-pencil-alt"></i>
-        </a>
-    </li>
+    {% if is_granted('ROLE_USER') %}
+        <li>
+            <a class="admin-navbar-item item-update" href=" {{ path('update_article', { id: article.id }) }}">
+                <i title="Modifier un article" class="fas fa-pencil-alt"></i>
+            </a>
+        </li>
+    {% endif %}
 {% endblock %}
 
 {% block title %}{{ article.title }}{% endblock %}
@@ -16,9 +18,11 @@
         <h1>[{{ article.category.name }}] {{ article.title }}</h1>
         {# Filtre |raw pour afficher html généré par CKEditor ! #}
         <p>{{ article.content|raw }}</p>
-        <p>Article publié le {{ article.creationDate|date('d/m/Y') }}</p>
+        <p>Article publié le {{ article.creationDate|date('d/m/Y') }}
+            par {{ article.user.firstName ~ ' ' ~ article.user.lastName }}</p>
         {% if article.lastModified is not null %}
-            <p>Article modifié le {{ article.lastModified|date('d/m/Y') }} à {{ article.lastModified|date('H:i') }}</p>
+            <p>Article modifié le {{ article.lastModified|date('d/m/Y') }} à {{ article.lastModified|date('H:i') }}
+                par {{ article.lastModifiedBy.firstName ~ ' ' ~ article.lastModifiedBy.lastName }}</p>
         {% endif %}
         <div class="vote">
             <p>Que pensez-vous de cet article ?</p>

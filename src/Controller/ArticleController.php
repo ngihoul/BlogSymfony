@@ -20,6 +20,7 @@ class ArticleController extends AbstractController
 
     /**
      * @param ArticleRepository $repo
+     * @param Request $request
      * @return Response
      */
     #[Route("/article", name: "article")]
@@ -78,6 +79,7 @@ class ArticleController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $article = $form->getData();
+            $article->setUser($this->getUser());
 
             $em->persist($article);
             $em->flush();
@@ -90,6 +92,12 @@ class ArticleController extends AbstractController
         ]);
     }
 
+    /**
+     * @param Request $request
+     * @param Article $article
+     * @param EntityManagerInterface $em
+     * @return Response
+     */
     #[Route('/article/update/{id}', name: 'update_article')]
     public function update(Request $request, Article $article, EntityManagerInterface $em): Response
     {
@@ -99,6 +107,7 @@ class ArticleController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $article = $form->getData();
             $article->setLastModified(new \DateTime());
+            $article->setLastModifiedBy($this->getUser());
 
             $em->persist($article);
             $em->flush();
@@ -118,7 +127,7 @@ class ArticleController extends AbstractController
      * @return Response
      */
     #[Route("/article/{id}", name: "article_detail")]
-    public function show($id, ArticleRepository $repo): Response
+    public function show(int $id, ArticleRepository $repo): Response
     {
         if (!is_numeric($id)) {
             return $this->render('article/404.html.twig');

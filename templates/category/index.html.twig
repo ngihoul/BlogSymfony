@@ -2,15 +2,26 @@
 
 {% block title %}Nos articles par catégorie !{% endblock %}
 
+{% block navbarAdmin %}
+    {{ parent() }}
+    {% if is_granted('ROLE_USER') %}
+        <li class="item-container">
+            <a class="admin-navbar-item item-create" href=" {{ path('create_category') }}">
+                <i title="Créer une nouvelle categorie" class="fas fa-plus"></i>
+            </a>
+        </li>
+    {% endif %}
+{% endblock %}
+
 {% block body %}
 
-<div class="body-wrapper">
-    <h1>Nos articles par catégorie !</h1>
-{% for category in categories %}
-    <li>
-        <a href="/{{ category.name }}/">{{ category.name }}</a>
-    </li>
-{% endfor %}
-    
-</div>
+    <div class="body-wrapper">
+        <h1>Nos articles par catégorie !</h1>
+        {% for category in categories %}
+            <li>
+                <a href="{{ path('categories_articles', {id : category.id }) }}">{{ category.name }}</a>
+            </li>
+        {% endfor %}
+
+    </div>
 {% endblock %}

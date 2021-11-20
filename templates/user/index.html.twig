@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello UserController!{% endblock %}
+
+{% block body %}
+    <div class="body-wrapper">
+        <h1>Hello {{ user.firstName ~ '  ' ~ user.lastName }} !</h1>
+        <h2>Vos articles</h2>
+        <ul>
+            {% if articles is not null %}
+                {% for article in articles %}
+                    <li>
+                        <a href="{{ path('article_detail', { id : article.id }) }}">{{ article.title }}</a>
+                    </li>
+                {% endfor %}
+            {% endif %}
+        </ul>
+        {% if articlesModified is not null %}
+            <h2>Les articles que vous avez modifiés</h2>
+            <ul>
+                {% for articleModified in articlesModified %}
+                    <a href="{{ path('article_detail', { id : articleModified.id }) }}">{{ articleModified.title }}</a>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -153,6 +153,10 @@ footer p {
     color: #fff;
 }
 
+.item-logout {
+    background-color: darkred;
+}
+
 @keyframes bouncing {
     0% {
         right: 0px;

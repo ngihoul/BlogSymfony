@@ -29,7 +29,9 @@ class ArticleType extends AbstractType
                 'choice_label' => 'name',
                 'label' => 'Catégorie'
             ])
-            ->add('content', CKEditorType::class, ['label' => 'Contenu'])
+            ->add('content', CKEditorType::class, [
+                'label' => 'Contenu'
+            ])
             ->add('save', SubmitType::class, [
                 'label' => 'Publier mon article'
             ]);

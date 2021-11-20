@@ -35,6 +35,9 @@
                 <a class="navbar-item item-article" href="{{ path('article') }}">Articles</a>
             </li>
             <li class="item-container">
+                <a class="navbar-item item-nategory" href="{{ path('category') }}">Categories</a>
+            </li>
+            <li class="item-container">
                 <a class="navbar-item item-twig" href="{{ path('twig') }}">Twig</a>
             </li>
         </ul>
@@ -44,14 +47,17 @@
 <nav id="adminNavBar" class="admin-navbar">
     <ul>
         {% block navbarAdmin %}
+            {% if is_granted('ROLE_USER') %}
+                <li class="item-container">
+                    <a class="admin-navbar-item item-logout" href=" {{ path('app_logout') }}">
+                        <i title="Se déconnecter" class="fas fa-sign-out-alt"></i>
+                    </a>
+                </li>
+            {% endif %}
             <li class="item-container">
-                <a class="admin-navbar-item item-login" href="#">
+                <a class="admin-navbar-item item-login"
+                   href="{% if is_granted('ROLE_USER') %} {{ path('user_profile') }} {% else %} {{ path('app_login') }} {% endif %}">
                     <i title="Voir son profil" class="far fa-user"></i>
-                </a>
-            </li>
-            <li class="item-container">
-                <a class="admin-navbar-item item-create" href=" {{ path('create') }}">
-                    <i title="Créer un nouvel article" class="fas fa-plus"></i>
                 </a>
             </li>
         {% endblock %}

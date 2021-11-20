@@ -13,11 +13,11 @@
                 <p class="creation-date">Publié le {{ article.creationDate|date('d/m/Y') }} - Catégorie
                     : {{ article.category.name }}</p>
                 {% if article.content|length > 300 %}
-                    <p>{{ article.content|slice(0,300) ~ '...' }}</p>
+                    <p>{{ article.content|slice(0,300)|striptags ~ '...' }}</p>
                     <p><a href="{{ path("article_detail", { id : article.id }) }}">Lire
                             l'article "{{ article.title }}"</a></p>
                 {% else %}
-                    <p>{{ article.content }}</p>
+                    <p>{{ article.content|striptags }}</p>
                 {% endif %}
             </section>
         {% endfor %}
