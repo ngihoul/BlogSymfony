@@ -75,6 +75,7 @@ class CategoryController extends AbstractController
             'title' => "Les articles concernant {$category->getName()}"
         ]);
     }
-
-
 }
+
+
+
