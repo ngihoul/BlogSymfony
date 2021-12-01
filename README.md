@@ -19,3 +19,4 @@ In order to master the basics of Symfony, we had to create a Blog and implement 
 * PHP 8.0.12
 * MySQL 8.0
 * Symfony 5.3.10
+* CSS3
